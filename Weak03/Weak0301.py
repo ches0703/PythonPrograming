@@ -1,4 +1,4 @@
-# Training Conditional Expression
+# Training Conditional Expression IF Else Elif
 
 score = int(input("Enter your score : "))
 if 80 < score < 100:
