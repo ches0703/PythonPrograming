@@ -17,8 +17,4 @@
 
 # HomeWork01 test
 
-a = input()
-a = int(a, 16)
-print("%d" % (a))
-print(format(16, '#b'))
-print('{:#b}'.format(10))
+print(format(11, '3'))
