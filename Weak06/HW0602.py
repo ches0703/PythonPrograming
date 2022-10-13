@@ -1,4 +1,14 @@
-# Comparison of mergeSort and selectionSort with user‐defined modules
+# 0602.py
+"""
+Project :  User-defined package/module Comparison of mergeSort and selectionSort
+Author: Eun-seong Choi
+Date of last update: 2022 / 10 / 13
+Update list:
+    - v1,1 : 10 /13
+        import Modules : C:/MyPyPackage/myPyModules
+              MyList, MySortings
+        Add MergeSort to MySortings
+"""
 import sys
 sys.path.append("C:/MyPyPackage/myPyModules")
 import MyList

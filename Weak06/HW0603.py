@@ -1,4 +1,13 @@
-# HW 6.3 Testing user‐defined module MyMatrix
+"""
+Project :  User-defined package/module MyMatrix
+Author: Eun-seong Choi
+Date of last update: 2022 / 10 / 13
+Update list:
+    - v1,1 : 10 /13
+        import Modules : C:/MyPyPackage/myPyModules
+              MyMatrix
+        Make Moduls : MyMatrix
+"""
 import sys
 sys.path.append("C:/MyPyPackage/myPyModules")
 import MyMatrix
