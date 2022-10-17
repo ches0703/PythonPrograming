@@ -9,6 +9,9 @@ Update list:
         Import Person Class : HW0701_Person
         Make Student Class :
             Part : Init, Mutator, Method
+    - v1.2 : 10 / 17
+        Make Student Class :
+            Part : Accessor    
 """
 
 
@@ -65,9 +68,20 @@ class Student(Person):
         print("Setting as default...")
         self.gpa = 0
 
+# Accessor --------------------------------------
+
+    def getStId(self):
+        return self.st_id
+
+    def getMajor(self):
+        return self.major
+
+    def getGpa(self):
+        return self.gpa
+
 # Method ----------------------------------------
     def __str__(self):
-        return "Student ( " + super().__str__() + ", {:6}, {:5}, {:2.1f} )".format(self.st_id, self.major, self.gpa)
+        return "Student ( " + super().__str__() + ", {:6}, {:5}, {:2.1f} )"\
+            .format(self.getStId(), self.getMajor(), self.getGpa())
 
 # End Class Student------------------------------
-
