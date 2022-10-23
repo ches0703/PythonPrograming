@@ -1,22 +1,11 @@
-"""
-Project : class Mtrx and Application Program
-Author: Eun-seong Choi
-Date of last update: 2022 / 10 / 18
-Update list:
-    - v1.1 : 10 / 18
-        Make Date Class :
-            Part : Init, Mutator
-                Method : setName(), __str__
-                        __add__, __sub__, __mul
-            Add Main area (Application)
-"""
-
-
+# User-defined Module – Class_Mtrx.py
+# 21912070 최은성
 class Mtrx:
     "Class of Mtrx : name, n_row, n_col, L_data"
 # Init ------------------------------------------
-    def __init__(self, name, n_row, n_col, L_data):  # 직접 구현
-        self.setName(name)
+
+    def __init__(self, name, n_row, n_col, L_data):
+        self.set_name(name)
         self.n_row = n_row
         self.n_col = n_col
         self.L_data = L_data
@@ -25,7 +14,7 @@ class Mtrx:
             self.matrix[i] = L_data[i * n_col: (i + 1) * n_col]
 
 # Mutator ---------------------------------------
-    def setName(self, name):
+    def set_name(self, name):
         if isinstance(name, str):  # Type check
             self.name = name
             return
@@ -36,41 +25,51 @@ class Mtrx:
             self.name = "None"
 
 # Method ----------------------------------------
+    # toString
     def __str__(self):
         S = ""
         S += self.name + " = \n"
         for i in self.matrix:
             for j in i:
-                S += "{:2} ".format(j)
+                S += "{:5.2f} ".format(j)
             S += "\n"
         return S
 
+    # "+" Operator
     def __add__(self, other):
         if (self.n_row == other.n_row) and\
                 (self.n_col == other.n_col):  # Check Matrix add condition
             resulte = Mtrx("Temp", self.n_row, self.n_col, self.L_data)
+            temp_L_data = []
             for i in range(self.n_row):
                 for j in range(self.n_col):
                     resulte.matrix[i][j] += other.matrix[i][j]
+                    temp_L_data.append(resulte.matrix[i][j])
+            resulte.L_data = temp_L_data
             return resulte
         else:  # condition not satisfied
             print("Error : Matrix sum condition not satisfied")
             # return blank List
             return []
 
+    # "-" Operator
     def __sub__(self, other):
         if (self.n_row == other.n_row) and\
                 (self.n_col == other.n_col):  # Check Matrix sub condition
             resulte = Mtrx("Temp", self.n_row, self.n_col, self.L_data)
+            temp_L_data = []
             for i in range(self.n_row):
                 for j in range(self.n_col):
                     resulte.matrix[i][j] -= other.matrix[i][j]
+                    temp_L_data.append(resulte.matrix[i][j])
+            resulte.L_data = temp_L_data
             return resulte
         else:  # condition not satisfied
             print("Error : Matrix sub condition not satisfied")
             # return blank List
             return []
 
+    # "*" Operator
     def __mul__(self, other):
         # Check Matrix mul condition
         if (self.n_col == other.n_row):
@@ -89,37 +88,12 @@ class Mtrx:
             # return blank List
             return []
 
+    def transpose(self):  # returns transposed matrix
+        # Make new Mtrix
+        temp = Mtrx("Temp", self.n_col, self.n_row, self.L_data)
+        # Transform
+        for i in range(self.n_row):
+            for j in range(self.n_col):
+                temp.matrix[j][i] = self.matrix[i][j]
+        return temp
 
-# Application -----------------------------------
-
-if __name__ == "__main__":
-    LA = [1, 2, 3, 4, 5,
-          6, 7, 8, 9, 10,
-          11, 12, 13, 14, 15]
-    LB = [1, 0, 0, 0, 0,
-          0, 1, 0, 0, 0,
-          0, 0, 1, 0, 0]
-    LC = [0, 0, 0,
-          1, 0, 0,
-          0, 1, 0,
-          0, 0, 1,
-          0, 0, 0]
-
-    mA = Mtrx("mA", 3, 5, LA)
-    print(mA)
-    mB = Mtrx("mB", 3, 5, LB)
-    print(mB)
-    mC = Mtrx("mC", 5, 3, LC)
-    print(mC)
-
-    mD = mA + mB
-    mD.setName("mD = mA + mB")
-    print(mD)
-
-    mE = mA - mB
-    mE.setName("mE = mA ‐ mB")
-    print(mE)
-
-    mF = mA * mC
-    mF.setName("mF = mA * mC") 
-    print(mF)
