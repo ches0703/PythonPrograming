@@ -1,3 +1,17 @@
+# HW0801.py
+"""
+Project : Student Data File I/O 
+Author: Eun-seong Choi
+Date of last update: 2022 / 11 / 04
+Update list:
+    - v1.1 : 10 / 18
+        Make Funthion : 
+            File : FReadData, FWriteData
+            Calc : CalcStudentList, CalEachClass
+            Else : FormatingStudentData, PrintStudentList
+        Add Application
+"""
+
 
 # Read File
 def FReadData(file_name):
@@ -11,16 +25,19 @@ def FReadData(file_name):
     return st_data_list
 
 
+# Write Data to file : Formated data
 def FWriteData(file_name, st_data_list):
     with open(file_name, "w") as file_output:
         file_output.write("============================================\n")
         file_output.write("Name :  Kor   Eng  Math   Sci    Sum     Avg\n")
         for st_data in st_data_list:
+            # Get str : formating str
             str_st_data = FormatingStudentData(st_data)
             file_output.write(str_st_data)
         file_output.write("============================================\n")
 
 
+# Calc each student's sum, avs
 def CalcStudentList(st_data_list):
     for st_data in st_data_list:
         score_sum = 0
@@ -31,27 +48,33 @@ def CalcStudentList(st_data_list):
         st_data.append(score_avg)
 
 
+# Calc each class's avg
 def CalEachClass(st_data_list):
+    # To save the avg
     each_class_avg_list = {
         "Kor_avg": 0,
         "Eng_avg": 0,
         "Math_avg": 0,
         "Sci_avg": 0
     }
+    # Before Calc avg, Calc Sum
     for st_data in st_data_list:
         each_class_avg_list["Kor_avg"] += int(st_data[1])
         each_class_avg_list["Eng_avg"] += int(st_data[2])
         each_class_avg_list["Math_avg"] += int(st_data[3])
         each_class_avg_list["Sci_avg"] += int(st_data[4])
 
+    # Calc avg
     each_class_avg_list["Kor_avg"] /= len(st_data_list)
     each_class_avg_list["Eng_avg"] /= len(st_data_list)
     each_class_avg_list["Math_avg"] /= len(st_data_list)
     each_class_avg_list["Sci_avg"] /= len(st_data_list)
 
+    # return dict as saved each class's avg
     return each_class_avg_list
 
 
+# Data Formating : to Str
 def FormatingStudentData(st_data):
     s = ""
     s += "{:<5}: ".format(st_data[0])  # Name
@@ -65,6 +88,7 @@ def FormatingStudentData(st_data):
     return s
 
 
+# Print Data on Display
 def PrintStudentList(st_data_list):
     print("============================================")
     print("Name :  Kor   Eng  Math   Sci    Sum     Avg")
@@ -74,11 +98,12 @@ def PrintStudentList(st_data_list):
     print("============================================")
 
 
+# Application
 if __name__ == "__main__":
 
     # File Relative Path
-    input_file_name = "Weak09/student_records.txt"
-    output_file_name = "Weak09/output.txt"
+    input_file_name = "student_records.txt"
+    output_file_name = "output.txt"
 
     # File Read and Print
     st_data_list = FReadData(input_file_name)
