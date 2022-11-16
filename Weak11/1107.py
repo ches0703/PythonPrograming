@@ -26,7 +26,6 @@ plt.grid(True)
 plt.title("normal_distribution_graph_1")
 # Save png file
 plt.savefig("HW10/normal_distribution_graph_1.png")
-
 # ===================================================================
 
 # When mu = -2.0, 0.0, +2.0, sigma = 1 =================== figure = 2
@@ -43,7 +42,6 @@ plt.grid(True)
 plt.title("normal_distribution_graph_2")
 # Save png file
 plt.savefig("HW10/normal_distribution_graph_2")
-
 # ===================================================================
 
 # Print on screen
