@@ -16,8 +16,8 @@ Update list:
 import pandas as pd
 
 # File Relative Path
-input_file_path = "InputExcel.xlsx"
-output_file_path = "processed_scores.xlsx"
+input_file_path = "HW08/InputExcel.xlsx"
+output_file_path = "HW08/processed_scores.xlsx"
 
 # Get data frame from input excel
 student_data_frame = pd.read_excel(input_file_path)
