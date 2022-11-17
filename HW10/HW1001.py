@@ -1,3 +1,15 @@
+# HW1001.py
+"""
+    Project : Calculate the solution in linear system as numpy module
+    Author: Eun-seong Choi
+    Date of last update: 2022 / 11 / 17
+    Update list:
+        - v1.1 : 11 / 17
+            Make array : A, B
+            Add calc part : det_A, Inv_A, X
+            Use the matmul() : B1, X1
+
+    """
 # numpy의 import
 import numpy as np
 
@@ -33,5 +45,6 @@ print("X = \n", X)
 B1 = np.matmul(A, X)
 print("B1 = A * X = \n", B1)
 
+# - X1 = inv_A * B의 계산 및 X1 출력
 X1 = np.matmul(Inv_A, B)
 print("X1 = Inv_A * B = \n", X1)

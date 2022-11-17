@@ -1,3 +1,12 @@
+# HW1002ToSaveArray.py
+"""
+Project : Calculate the Matrix with numpy module
+Author: Eun-seong Choi
+Date of last update: 2022 / 11 / 17
+Update list:
+    - v1.1 : 11 / 17
+        Write 7 x 7 matrix, save to HW10/7x7Array.txt
+"""
 import numpy as np
 A = [
     [1, 2, 3, 4, 5, 6, 7],
