@@ -1,2 +1,10 @@
-L = [[0 for j in range(3)] for i in range(5)]
-print(L)
+
+def increse(a):
+    a += 10
+    print(a)
+
+
+a = 10
+print(a)
+increse(a)
+print(a)
