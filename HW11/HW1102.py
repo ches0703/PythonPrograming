@@ -1,155 +1,67 @@
-import queue
+# HW1102.py
+# HW 11.2 Applications of MyGraph.py
+"""
+Project : Applications of MyGraph.py
+Author: Eun-seong Choi
+Date of last update: 2022 / 11 / 24
+Update list:
+    - v1.1 : 11 / 24
+        Import : MyGraph.py's Node, Edge, WeightedEdge, WeightedGraph
+        Import : sys
+        Make text file : KR_interCityDist.txt
+        Make funtion : Dijkstra, initGraph, main
+        
+"""
+from MyGraph import Node, Edge, WeightedEdge, WeightedGraph
 import sys
-
-
-# Node : Point with name
-class Node:
-    def __init__(self, name):
-        self.name = name
-
-    def getName(self):
-        return self.name
-
-    def __str__(self):
-        return self.name
-
-
-#  Edge : Save the inforaition of conneted between point
-class Edge:
-    def __init__(self, src_name, dest_name):
-        self.src_name = src_name
-        self.dest_name = dest_name
-
-    def getSrcName(self):
-        return self.src_name
-
-    def getDestName(self):
-        return self.dest_name
-
-    def __str__(self):
-        return "{} -> {}".format(self.src_name, self.dest_name)
-
-
-# WeightedEdge : Edge data + Weight(distance of connected point)
-class WeightedEdge(Edge):
-    def __init__(self, src_name, dest_name, weight=1.0):
-        super(WeightedEdge, self).__init__(
-            src_name, dest_name)  # Super class init
-        self.weight = weight
-
-    def getWeight(self):
-        return self.weight
-
-    def __str__(self):
-        return "{:3}--({:4})->{:>3}".format(self.src_name, self.weight, self.dest_name)
-
-
-# WeightedGraph : Graph with WeightedEdge & Node
-class WeightedGraph:
-    def __init__(self):
-        self.nodes = []             # List of Node
-        self.node_names = []        # List of Node's name
-        self.adjacency_nodes = {}   # dict of {src_node : list of adjacency_node}
-        self.weighted_edges = []    # List of WeightedEdge
-        # dict of {edge(src_name, dest_name) : weight}
-        self.edge_weights = {}
-
-    # Add Node in List : nodes, node_names & inti adjacency_nodes
-    def addNode(self, node: Node):
-        if node.getName() not in self.node_names:     # Check Duplicate & Add Node
-            self.nodes.append(node)
-            self.node_names.append(node.getName())
-            self.adjacency_nodes[node.getName()] = []
-
-    # Add Edge in dict : add in adjacency_nodes's list, add in edgeweights
-    def addEdge(self, weighted_edge: WeightedEdge):
-        src_name = weighted_edge.getSrcName()
-        dest_name = weighted_edge.getDestName()
-        # Check Edge's element in node's list(nodes, node_names)
-        if not ((src_name in self.node_names) and (dest_name in self.node_names)):
-            raise ValueError("")
-        self.weighted_edges.append(weighted_edge)
-        # add in adjacency_nodes's list
-        self.adjacency_nodes[src_name].append(dest_name)
-        # Add in edgeweights
-        self.edge_weights[(src_name, dest_name)] = weighted_edge.getWeight()
-
-    # Return distans of between nodes
-    def getEdgeWeight(self, edge: Edge):
-        if (edge.src_name, edge.dest_name) in self.edge_weights:
-            return self.edge_weights[(edge.src_name, edge.dest_name)]
-        else:
-            return None
-
-    # Print
-    # Print Nodes
-    def printNodes(self):
-        print("Node = ", end="")
-        print(self.node_names)
-        print()
-
-    # Print Edge
-    def printEdges(self):
-        print("Edges : ", end="")
-        enter_count = 0
-        for weighted_edge in self.weighted_edges:
-            if enter_count % 4 == 0:
-                print()
-            print(weighted_edge, end=",  ")
-            enter_count += 1
-        print("\n")
-
-    # Print distance Table
-    def printDistanceTable(self):
-        print("Inter City Distance table :")
-        print("    |", end="")
-        for name in self.node_names:
-            print("{:>4}".format(name), end="")
-        print("\n-------------------------------------------------")
-        for col_node in self.node_names:
-            print("{:4}|".format(col_node), end="")
-            for row_node in self.node_names:
-                distance = self.getEdgeWeight(Edge(col_node, row_node))
-                if col_node == row_node:
-                    print("   0", end="")
-                elif distance is None:
-                    print("  oo", end="")
-                else:
-                    print("{:4}".format(distance), end="")
-            print()
-        print()
-
 
 PLUS_INF = sys.maxsize
 
+
+# Use Sequential Search
 def Dijkstra(G: WeightedGraph, start_name, end_name):
     if (start_name not in G.node_names) and (end_name not in G.node_names):
         raise ValueError("")
-    distance = {}
-    for node_name in G.adjacency_nodes[start_name]:
-        if node_name == end_name:
-            return G.getEdgeWeight(Edge(start_name, node_name))
-        distance[(start_name, node_name)] = {}
-        distance[(start_name, node_name)]["node"] = node_name
-        distance[(start_name, node_name)]["path"] = start_name + "->" + node_name
-        distance[(start_name, node_name)]["weight"] = G.getEdgeWeight(Edge(start_name, node_name))
-    
-    print(distance)
-    
-    for el in distance:
-        if distance[el]["node"] == end_name:
-            return el["weight"]
-        for ad_node_name in G.adjacency_nodes[distance[el]["node"]]:
-            if (start_name, ad_node_name) in distance.keys():
-                if G.getEdgeWeight(Edge(start_name, ad_node_name)) < distance[(start_name, ad_node_name)]["weight"]:
-                    distance[(start_name, ad_node_name)]["weight"] = G.getEdgeWeight(Edge(start_name, ad_node_name))
-            else:
-                distance[(start_name, ad_node_name)] = {}
-                distance[(start_name, ad_node_name)]["node"] = node_name
-                distance[(start_name, ad_node_name)]["path"] = ad_node_name + "->" + node_name
-                distance[(start_name, ad_node_name)]["weight"] = G.getEdgeWeight(Edge(start_name, node_name))
-        
 
+    weighted_nodes = {}  # to save node's shorter path & distance from start
+    # init : weighted_nodes, weighted_nodes[start_node]
+    for node in G.nodes:
+        weighted_nodes[node.getName()] = {}
+        weighted_nodes[node.getName()]["path"] = ""
+        weighted_nodes[node.getName()]["distance"] = PLUS_INF
+    weighted_nodes[start_name] = {}
+    weighted_nodes[start_name]["distance"] = 0
+    weighted_nodes[start_name]["path"] = start_name
+
+    node_travel = []    # start node -> level 1 node -> level 2 node ...
+    node_travel.append(start_name)
+    now_node = start_name
+    i = 1
+    while i < len(weighted_nodes):  # check and data save adjacency node from low level
+        ad_nodes = G.adjacency_nodes[now_node]
+        for ad_node in ad_nodes:
+            distance = G.getEdgeWeight(
+                Edge(now_node, ad_node)) + weighted_nodes[now_node]["distance"]
+            path = weighted_nodes[now_node]["path"]
+            if distance is None:
+                continue
+            elif weighted_nodes[ad_node] is None:
+                weighted_nodes[ad_node]["distance"] = distance
+                weighted_nodes[ad_node]["path"] = path + " -> " + ad_node
+            else:
+                if weighted_nodes[ad_node]["distance"] > distance:
+                    weighted_nodes[ad_node]["distance"] = distance
+                    weighted_nodes[ad_node]["path"] = path + " -> " + ad_node
+        if end_name in ad_nodes:
+            yield weighted_nodes[end_name]["path"]
+            yield weighted_nodes[end_name]["distance"]
+            return
+        for node in ad_nodes:
+            if node not in node_travel:
+                node_travel.append(node)
+        now_node = node_travel[i]
+        i += 1
+    return None
 
 
 def initGraph(file_name) -> WeightedGraph:
@@ -172,9 +84,21 @@ def initGraph(file_name) -> WeightedGraph:
 
 
 if __name__ == "__main__":
-    G = initGraph("HW11/KR_interCityDist.txt")
+    G = initGraph("KR_interCityDist.txt")
     G.printNodes()
     G.printEdges()
     G.printDistanceTable()
 
-    print(Dijkstra(G, "GJ", "SC"))
+    start_name = "GJ"
+    end_name = "SC"
+    path, distance = Dijkstra(G, start_name, end_name)
+    print("Found shortestPath_Dijkstra ({} -> {})".format(start_name, end_name))
+    print("path = {}, distance = {}".format(path, distance))
+
+    print()
+
+    start_name = "SC"
+    end_name = "GJ"
+    path, distance = Dijkstra(G, start_name, end_name)
+    print("Found shortestPath_Dijkstra ({} -> {})".format(start_name, end_name))
+    print("path = {}, distance = {}".format(path, distance))
