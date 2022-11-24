@@ -1,3 +1,7 @@
+import queue
+import sys
+
+
 # Node : Point with name
 class Node:
     def __init__(self, name):
@@ -45,8 +49,8 @@ class WeightedGraph:
     def __init__(self):
         self.nodes = []             # List of Node
         self.node_names = []        # List of Node's name
-        self.weighted_edges = []    # List of WeightedEdge
         self.adjacency_nodes = {}   # dict of {src_node : list of adjacency_node}
+        self.weighted_edges = []    # List of WeightedEdge
         # dict of {edge(src_name, dest_name) : weight}
         self.edge_weights = {}
 
@@ -69,15 +73,6 @@ class WeightedGraph:
         self.adjacency_nodes[src_name].append(dest_name)
         # Add in edgeweights
         self.edge_weights[(src_name, dest_name)] = weighted_edge.getWeight()
-
-    def getNeighbors(self, node_name):
-        return self.adjacency_nodes[node_name]
-
-    def getAdjacencyNodes(self):
-        return self.adjacency_nodes
-
-    def getNodeNames(self):
-        return self.node_names
 
     # Return distans of between nodes
     def getEdgeWeight(self, edge: Edge):
@@ -125,6 +120,38 @@ class WeightedGraph:
         print()
 
 
+PLUS_INF = sys.maxsize
+
+def Dijkstra(G: WeightedGraph, start_name, end_name):
+    if (start_name not in G.node_names) and (end_name not in G.node_names):
+        raise ValueError("")
+    distance = {}
+    for node_name in G.adjacency_nodes[start_name]:
+        if node_name == end_name:
+            return G.getEdgeWeight(Edge(start_name, node_name))
+        distance[(start_name, node_name)] = {}
+        distance[(start_name, node_name)]["node"] = node_name
+        distance[(start_name, node_name)]["path"] = start_name + "->" + node_name
+        distance[(start_name, node_name)]["weight"] = G.getEdgeWeight(Edge(start_name, node_name))
+    
+    print(distance)
+    
+    for el in distance:
+        if distance[el]["node"] == end_name:
+            return el["weight"]
+        for ad_node_name in G.adjacency_nodes[distance[el]["node"]]:
+            if (start_name, ad_node_name) in distance.keys():
+                if G.getEdgeWeight(Edge(start_name, ad_node_name)) < distance[(start_name, ad_node_name)]["weight"]:
+                    distance[(start_name, ad_node_name)]["weight"] = G.getEdgeWeight(Edge(start_name, ad_node_name))
+            else:
+                distance[(start_name, ad_node_name)] = {}
+                distance[(start_name, ad_node_name)]["node"] = node_name
+                distance[(start_name, ad_node_name)]["path"] = ad_node_name + "->" + node_name
+                distance[(start_name, ad_node_name)]["weight"] = G.getEdgeWeight(Edge(start_name, node_name))
+        
+
+
+
 def initGraph(file_name) -> WeightedGraph:
     G = WeightedGraph()
     name_set = set()
@@ -149,3 +176,5 @@ if __name__ == "__main__":
     G.printNodes()
     G.printEdges()
     G.printDistanceTable()
+
+    print(Dijkstra(G, "GJ", "SC"))
