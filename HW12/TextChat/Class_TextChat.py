@@ -33,6 +33,8 @@ class TextChat():
         # Run by mode
         self.mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)   # Make Socket, for use TCP
         if self.mode == "Server":   # Run by Server
+            # Insert sever adderss(my adress) to server_address_entry
+            self.server_address_entry.insert(END, self.my_address)
             # Bind socket to (Host's IP Adress, port_number)
             self.mySocket.bind((host_address, SocketChat_PortNumber))
             # Print status in Gui
