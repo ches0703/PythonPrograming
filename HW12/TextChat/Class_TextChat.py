@@ -100,7 +100,7 @@ class TextChat():
         
         # Add a Textbox Entry widgets (myAddr, peerAddr) in the frame_addr_connect
         self.server_address = tk.StringVar()
-        self.server_address_entry = ttk.Entry(frame_address_connect, width=15, textvariable=self.my_address)
+        self.server_address_entry = ttk.Entry(frame_address_connect, width=15, textvariable="")
         self.server_address_entry.insert(END, host_address)
         self.server_address_entry.grid(column=0, row=1, sticky='W')
 
