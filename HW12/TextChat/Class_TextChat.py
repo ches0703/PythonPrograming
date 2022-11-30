@@ -10,7 +10,7 @@ from tkinter import END
 
 
 LocalHost = "127.0.0.1"         # IP address : Local host's IP Adress
-SocketChat_PortNumber = 24000   # Port Number : set Port 24000
+SocketChat_PortNumber = 8080   # Port Number : set Port 24000
 
 
 class TextChat():
