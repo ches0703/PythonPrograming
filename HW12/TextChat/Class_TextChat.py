@@ -44,7 +44,7 @@ class TextChat():
             self.conection, self.client_address = self.mySocket.accept()
             # Print Client Adress in Shell
             print("TCP Server is connected to client ({})\n".format(self.client_address))
-            # Print Client Adress in GUI
+            # Print Conection state & Client Adress in GUI
             self.scrDisplay.insert(tk.INSERT, "TCP server is connected to client\n")
             self.scrDisplay.insert(tk.INSERT, "TCP client IP address : {}\n".format(self.client_address[0]))
             self.client_address_entry.insert(END, self.client_address[0])
@@ -80,7 +80,7 @@ class TextChat():
         msgToPeer = str(self.scrTextInput.get(1.0, END))        # Read the msg from Input Area
         self.scrDisplay.insert(tk.INSERT, "<< " + msgToPeer)    # Print send msg in GUI
         self.conection.send(bytes(msgToPeer.encode()))          # Send the msg
-        self.scrTextInput.delete('1.0', END)                    # Clear scr_msgInput scrolltext
+        self.scrTextInput.delete(1.0, END)                      # Clear scr_msgInput scrolltext
 
     # Exit GUI cleanly; definition of quit()
     def _quit(self):
@@ -119,13 +119,17 @@ class TextChat():
         msgDisplay_label.grid(column=0, row=1)
         self.scrDisplay = scrolledtext.ScrolledText(frame, width=scrol_w, height=scrol_h, wrap=tk.WORD)
         self.scrDisplay.grid(column=0, row=2, sticky='E')
+        
         msgInput_label = ttk.Label(frame, text="Input Text Message ({}) :".format(self.mode))
         msgInput_label.grid(column=0, row=3)
+        
         self.scrTextInput = scrolledtext.ScrolledText(frame, width=40, height=3, wrap=tk.WORD)
         self.scrTextInput.grid(column=0, row=4)  # columnspan=3
+        
         # Add Buttons (cli_send, serv_send)
         txButton = ttk.Button(frame, text="Send Message to Peer", command=self.sockSendMsg)
         txButton.grid(column=0, row=5, sticky='E')
+
         # Place cursor into the message input scrolled text
         self.scrTextInput.focus()
     
