@@ -1,4 +1,16 @@
 # Userdefined module - Class_VideoChat.py
+# HomeWork 12 - 02
+"""
+Project : VideoChat
+Author: Eun-seong Choi
+Date of last update: 2022 / 12 / 01
+Update list:
+    - v1.1 : 12 / 01
+        Make Class : VideoChat
+            __init__, run, recvall, sendVideo, captureVideo, recieveVideo
+        Add commit & Retouch variable name
+        Make Application file : VideoChat_Server, VideoChat_Client 
+"""
 import socket
 import cv2
 import time

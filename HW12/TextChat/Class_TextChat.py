@@ -1,4 +1,16 @@
 # User-defined module - Class_TextChat.py
+# HomeWork 12 - 01
+"""
+Project : TextChat
+Author: Eun-seong Choi
+Date of last update: 2022 / 12 / 01
+Update list:
+    - v1.1 : 12 / 01
+        Make Class : TextChat
+            __init__, sockRecvMsg, sockSendMsg, _quit, createWidgets
+        Add commit & Retouch variable name
+        Make Application file : TextChat_Server, TextChat_Client 
+"""
 import socket           # for comunicate
 import threading        # for multi-thread
 from time import sleep  # for switching
