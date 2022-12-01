@@ -15,11 +15,7 @@ class VideoChat():
         hostname = socket.gethostname()
         self.my_address = socket.gethostbyname(hostname)
         print("My IP addressess = {}".format(self.my_address))
-        if self.my_mode == "Server":
-            self.myWebCam = 0  # SERVER_WEBCAM = 0
-        else:
-            self.myWebCam = 0  # CLIENT_WEBCAM = 1
-        self.op_state = "RUN"
+        self.myWebCam = 0  # SERVER_WEBCAM = 0
 
     def run(self):
         if self.my_mode == "Server":
@@ -94,7 +90,6 @@ class VideoChat():
 
     def captureVideo(self, queue):
         server_webcam = cv2.VideoCapture(self.myWebCam)
-        server_webcam.set(cv2.CAP_PROP_FPS, 8)  # change FPS from 30 to 8
         fr_width, fr_height, fps = server_webcam.get(
             3), server_webcam.get(4), server_webcam.get(cv2.CAP_PROP_FPS)
         print("{}_webcam frame width ({}), height({}), fps({})".format(
@@ -113,7 +108,7 @@ class VideoChat():
             img_data = np.array(imgencode)
             stringData = img_data.tobytes()
             queue.put(stringData)
-            # cv2.imshow('Server:: Resized_Server_Video', resized_svrfr)
+            cv2.imshow('Server:: Resized_Server_Video', resized_svrfr)
             key = cv2.waitKey(1)
             if key == 27:  # if ESC key is input, then exit
                 print("{} :: ESC key pressed => exit".format(self.my_mode))
