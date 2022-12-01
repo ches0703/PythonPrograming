@@ -106,8 +106,8 @@ class VideoChat():
         print("{}:: terminating thread_sendVideo() ...".format(self.my_mode))
 
     def captureVideo(self, queue):
-        # Add Webcam
-        user_webcam = cv2.VideoCapture(self.myWebCam)
+        user_webcam = cv2.VideoCapture(self.myWebCam)   # Add Webcam
+        user_webcam.set(cv2.CAP_PROP_FPS, 8)            # change FPS from 30 to 8
         # Get webcam's info & Print
         fr_width, fr_height, fps = user_webcam.get(
             3), user_webcam.get(4), user_webcam.get(cv2.CAP_PROP_FPS)
