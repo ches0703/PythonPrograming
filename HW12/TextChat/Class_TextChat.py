@@ -4,8 +4,8 @@ import threading        # for multi-thread
 from time import sleep  # for switching
 # for GUI interface
 import tkinter as tk
-from tkinter import scrolledtext
 from tkinter import ttk
+from tkinter import scrolledtext
 from tkinter import END
 
 
@@ -30,14 +30,14 @@ class TextChat():
                        .format(self.mode))  # Set window's title
         self.createWidgets()
 
-        # Run by mode
         self.mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)   # Make Socket, for use TCP
+        # Run by mode
         if self.mode == "Server":   # Run by Server
             # Insert sever adderss(my adress) to server_address_entry
             self.server_address_entry.insert(END, self.my_address)
             # Bind socket to (Host's IP Adress, port_number)
             self.mySocket.bind((host_address, SocketChat_PortNumber))
-            # Print status in Gui
+            # Print status in GUI
             self.scrDisplay.insert(tk.INSERT, "TCP server is waiting for a client .... \n")
             self.mySocket.listen(1)     # Waiating for Connection
             # if detect connection request : accept
@@ -49,12 +49,14 @@ class TextChat():
             self.scrDisplay.insert(tk.INSERT, "TCP client IP address : {}\n".format(self.client_address[0]))
             self.client_address_entry.insert(END, self.client_address[0])
         elif self.mode == "Client":  # Run by Cliente
-            self.client_address = self.my_address
-            self.client_address_entry.insert(END, self.my_address)
-            server_address_str = input("Server IP Addr (e.g., '127.0.0.1') = ")
-            self.mySocket.connect((server_address_str, SocketChat_PortNumber))  # send connect request to TCP server
-            self.server_address = self.mySocket.getpeername()
+            self.client_address = self.my_address                   # Set client_address by my_address
+            self.client_address_entry.insert(END, self.my_address)  # Print client_address(my_address) in GUI
+            server_address_str = input("Server IP Addr = ")         # Get server's IP address from shell
+            # Send connect request to TCP server
+            self.mySocket.connect((server_address_str, SocketChat_PortNumber))  
+            self.server_address = self.mySocket.getpeername()       # Get connented host(server)'s data : IP address
             print("TCP Client is connected to server ({})\n".format(self.server_address))
+            # Print Conection state & Server Adress in GUI
             self.scrDisplay.insert(tk.INSERT, "TCP client is connected to server \n")
             self.scrDisplay.insert(tk.INSERT, "TCP server IP address : {}\n".format(self.server_address[0]))
             self.server_address_entry.insert(END, self.server_address[0])
