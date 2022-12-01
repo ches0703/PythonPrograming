@@ -16,6 +16,7 @@ class VideoChat():
         self.my_address = socket.gethostbyname(hostname)
         print("My IP addressess = {}".format(self.my_address))
         self.myWebCam = 0  # SERVER_WEBCAM = 0
+        self.op_state = "RUN"
 
     def run(self):
         if self.my_mode == "Server":
@@ -121,7 +122,7 @@ class VideoChat():
         while True:
             if self.op_state == "QUIT":
                 break
-            length = self.recvall(peerSocket, 16)
+            length = self.recvall(peerSocket, 2)
             if length == 0 or length is None or length == b'':
                 self.op_state = "QUIT"
                 break
