@@ -1,4 +1,4 @@
-# User-defined module - Class_TextChat.py (1)
+# User-defined module - Class_TextChat.py
 import socket           # for comunicate
 import threading        # for multi-thread
 from time import sleep  # for switching
@@ -9,7 +9,7 @@ from tkinter import scrolledtext
 from tkinter import END
 
 
-LocalHost = "127.0.0.1"         # IP address : Local host's IP Adress
+LocalHost = "127.0.0.1"         # IP address : For use Local host
 SocketChat_PortNumber = 24000   # Port Number : set Port 24000
 
 
