@@ -100,14 +100,13 @@ class VideoChat():
                 except Exception:   # ConnectionResetError, ConnectionAbortedError
                     self.op_state = "QUIT"
                     break
-            time.sleep(0.1)
+            time.sleep(0.01)
         print("{}:: closing peerSocket() ...".format(self.my_mode))
         peerSocket.close()
         print("{}:: terminating thread_sendVideo() ...".format(self.my_mode))
 
     def captureVideo(self, queue):
         user_webcam = cv2.VideoCapture(self.myWebCam)   # Add Webcam
-        user_webcam.set(cv2.CAP_PROP_FPS, 8)            # change FPS from 30 to 8
         # Get webcam's info & Print
         fr_width, fr_height, fps = user_webcam.get(
             3), user_webcam.get(4), user_webcam.get(cv2.CAP_PROP_FPS)
@@ -137,7 +136,7 @@ class VideoChat():
                 print("{} :: ESC key pressed => exit".format(self.my_mode))
                 self.op_state = "QUIT"
                 break
-            time.sleep(0.05)
+            time.sleep(0.01)
         print("{}:: terminating thread_captureVideo() ...".format(self.my_mode))
 
     def recieveVideo(self, peerSocket):
@@ -163,5 +162,5 @@ class VideoChat():
                 print("{} :: ESC key pressed => exit".format(self.my_mode))
                 self.op_state = "QUIT"
                 break
-            time.sleep(0.05)
+            time.sleep(0.01)
         print("{}:: terminating thread_recieveVideo() ...".format(self.my_mode))
