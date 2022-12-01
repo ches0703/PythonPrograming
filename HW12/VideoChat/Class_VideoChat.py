@@ -9,35 +9,35 @@ PORT = 9999
 
 
 class VideoChat():
-    def __init__(self, role):
-        self.myRole = role
-        print("VideoChat initiated as {} ...".format(role))
+    def __init__(self, mode):
+        self.my_mode = mode
+        print("VideoChat initiated as {} ...".format(mode))
         hostname = socket.gethostname()
-        self.myAddr = socket.gethostbyname(hostname)
-        print("My IP address = {}".format(self.myAddr))
-        if self.myRole == "Server":
+        self.my_address = socket.gethostbyname(hostname)
+        print("My IP addressess = {}".format(self.my_address))
+        if self.my_mode == "Server":
             self.myWebCam = 0  # SERVER_WEBCAM = 0
         else:
-            self.myWebCam = 1  # CLIENT_WEBCAM = 1
+            self.myWebCam = 0  # CLIENT_WEBCAM = 1
         self.op_state = "RUN"
 
     def run(self):
-        if self.myRole == "Server":
+        if self.my_mode == "Server":
             self.mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.mySocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            self.mySocket.bind((self.myAddr, PORT))
+            self.mySocket.bind((self.my_address, PORT))
             self.mySocket.listen()
             print('Server::Video chatting server started')
             print('Server::Waiting for client .... ')
-            self.peerSocket, self.peerAddr = self.mySocket.accept()
+            self.peerSocket, self.peer_address = self.mySocket.accept()
             print('Server::connected to client ({} : {})'.format(
-                self.peerSocket, self.peerAddr))
-        elif self.myRole == "Client":
-            self.peerAddr = input("Input server IP address = ")
+                self.peerSocket, self.peer_address))
+        elif self.my_mode == "Client":
+            self.peer_address = input("Input server IP addressess = ")
             print('Client::Connecting to Server')
             self.mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.mySocket.connect((self.peerAddr, PORT))
-            print('Client::Connected to Server({}:{})'.format(self.peerAddr, PORT))
+            self.mySocket.connect((self.peer_address, PORT))
+            print('Client::Connected to Server({}:{})'.format(self.peer_address, PORT))
             self.peerSocket = self.mySocket
 
         self.queue = Queue()
@@ -45,7 +45,7 @@ class VideoChat():
             target=self.captureVideo, args=(self.queue,))
         thrd_CaptureVideo.start()
         thrd_TxVideo = threading.Thread(target=self.txVideo, args=(
-            self.peerSocket, self.peerAddr, self.queue,))
+            self.peerSocket, self.queue))
         thrd_TxVideo.start()
         thrd_RxVideo = threading.Thread(
             target=self.rxVideo, args=(self.peerSocket,))
@@ -54,13 +54,14 @@ class VideoChat():
         thrd_TxVideo.join()
         thrd_RxVideo.join()
         thrd_CaptureVideo.join()
-        print("VideoChatt( {}) is closing socket and quit video chatt".format(self.myRole))
+        print("VideoChatt( {}) is closing socket and quit video chatt".format(self.my_mode))
         self.mySocket.close()
 
     def recvall(self, sock, count):
         if count == 0 or count is None:
             return None
         buf = b''
+        # Get data & Save in buffer
         while count:
             try:
                 newbuf = sock.recv(count)
@@ -73,24 +74,23 @@ class VideoChat():
             count -= len(newbuf)
         return buf
 
-    def txVideo(self, peerSocket, addr, queue):
+    def txVideo(self, peerSocket, queue):
         while True:
             if self.op_state == "QUIT":
                 break
-            if queue.empty():
-                # print("{}::queue is empty, self.op_state = {}".format(self.myRole, self.op_state))
-                time.sleep(0.1)
-            try:
-                stringData = queue.get()
-                peerSocket.send(str(len(stringData)).ljust(16).encode())
-                peerSocket.send(stringData)
-            except Exception:  # ConnectionResetError, ConnectionAbortedError
-                self.op_state = "QUIT"
-                break
+            if not queue.empty():   # if queue is not empty
+                try:                # Get String data
+                    stringData = queue.get()
+                    # Send data : String's length. String
+                    peerSocket.send(str(len(stringData)).ljust(16).encode())    # Send String's length data
+                    peerSocket.send(stringData)                                 # Send String data
+                except Exception:   # ConnectionResetError, ConnectionAbortedError
+                    self.op_state = "QUIT"
+                    break
             time.sleep(0.1)
-        print("{}:: closing peerSocket() ...".format(self.myRole))
+        print("{}:: closing peerSocket() ...".format(self.my_mode))
         peerSocket.close()
-        print("{}:: terminating thread_txVideo() ...".format(self.myRole))
+        print("{}:: terminating thread_txVideo() ...".format(self.my_mode))
 
     def captureVideo(self, queue):
         server_webcam = cv2.VideoCapture(self.myWebCam)
@@ -98,7 +98,7 @@ class VideoChat():
         fr_width, fr_height, fps = server_webcam.get(
             3), server_webcam.get(4), server_webcam.get(cv2.CAP_PROP_FPS)
         print("{}_webcam frame width ({}), height({}), fps({})".format(
-            self.myRole, fr_width, fr_height, fps))
+            self.my_mode, fr_width, fr_height, fps))
         while True:
             if self.op_state == "QUIT":
                 break
@@ -116,11 +116,11 @@ class VideoChat():
             # cv2.imshow('Server:: Resized_Server_Video', resized_svrfr)
             key = cv2.waitKey(1)
             if key == 27:  # if ESC key is input, then exit
-                print("{} :: ESC key pressed => exit".format(self.myRole))
+                print("{} :: ESC key pressed => exit".format(self.my_mode))
                 self.op_state = "QUIT"
                 break
             time.sleep(0.05)
-        print("{}:: terminating thread_captureVideo() ...".format(self.myRole))
+        print("{}:: terminating thread_captureVideo() ...".format(self.my_mode))
 
     def rxVideo(self, peerSocket):
         while True:
@@ -134,11 +134,11 @@ class VideoChat():
             data = np.frombuffer(stringData, dtype='uint8')
             decimg = cv2.imdecode(data, 1)
             cv2.imshow('{} :: received video from peer'.format(
-                self.myRole), decimg)
+                self.my_mode), decimg)
             key = cv2.waitKey(1)
             if key == 27:  # if ESC key is input, then exit
-                print("{} :: ESC key pressed => exit".format(self.myRole))
+                print("{} :: ESC key pressed => exit".format(self.my_mode))
                 self.op_state = "QUIT"
                 break
             time.sleep(0.05)
-        print("{}:: terminating thread_rxVideo() ...".format(self.myRole))
+        print("{}:: terminating thread_rxVideo() ...".format(self.my_mode))
