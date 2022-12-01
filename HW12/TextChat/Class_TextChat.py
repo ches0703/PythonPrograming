@@ -63,26 +63,30 @@ class TextChat():
         # Start TCP/IP server in its own thread
         thread_sockRecvMsg = threading.Thread(target=self.sockRecvMsg, daemon=True)
         thread_sockRecvMsg.start()
-
+    
+    # Get Data from other host
     def sockRecvMsg(self):
         while True:
-            recvMsg = self.conection.recv(512).decode()
+            # Recieve msg = Decode Recive data
+            recvMsg = self.conection.recv(512).decode()     
             if not recvMsg:
                 break
+            # Print Recive msg in GUI
             self.scrDisplay.insert(tk.INSERT, ">> " + recvMsg)
         self.conection.close()
+
+    # Send Data from other host
+    def sockSendMsg(self):
+        msgToPeer = str(self.scrTextInput.get(1.0, END))        # Read the msg from Input Area
+        self.scrDisplay.insert(tk.INSERT, "<< " + msgToPeer)    # Print send msg in GUI
+        self.conection.send(bytes(msgToPeer.encode()))          # Send the msg
+        self.scrTextInput.delete('1.0', END)                    # Clear scr_msgInput scrolltext
 
     # Exit GUI cleanly; definition of quit()
     def _quit(self):
         self.win.quit()
         self.win.destroy()
         exit()
-
-    def sockSendMsg(self):  # from server send message to client
-        msgToPeer = str(self.scrTextInput.get(1.0, END))
-        self.scrDisplay.insert(tk.INSERT, "<< " + msgToPeer)
-        self.conection.send(bytes(msgToPeer.encode()))
-        self.scrTextInput.delete('1.0', END)  # clear scr_msgInput scrolltext
 
     # GUI Part : createWidgets()
     def createWidgets(self):
