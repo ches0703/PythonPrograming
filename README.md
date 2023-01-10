@@ -1,2 +1,2 @@
-# PythonePrograming
-Pythone programing
+# PythonPrograming
+Python programing
